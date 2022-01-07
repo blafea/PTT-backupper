@@ -75,7 +75,7 @@ def huffman_encoding(node_list, root):
 def print_code_table(code, freq_dic):
     '''印出編碼表'''
     for i in range(len(code)):
-        print("character: ", freq_dic[i][0], "frequency: ", freq_dic[i][1], "code: ", code[i])
+        print("character: ", repr(freq_dic[i][0]), "frequency: ", freq_dic[i][1], "code: ", code[i])
 
 def txt_to_code(fname, code_dic):
     '''將文檔改寫為對應之編碼'''
