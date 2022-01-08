@@ -9,7 +9,7 @@ class node:
         self.father = father
         self.name = name
     def isLeft(self):
-        #判斷該節點是否為其父節點之左子節點
+        '''判斷該節點是否為其父節點之左子節點'''
         return self.father.lchild == self
     def __str__(self):
         return f"lchild: {self.lchild}, rchild: {self.rchild}, freq: {self.freq}, father: {self.father}, name: {self.name}"
