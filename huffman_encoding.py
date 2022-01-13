@@ -1,18 +1,30 @@
 import os, math
 
 class node:
-    def __init__(self, lchild = None, rchild = None, freq = 0, father = None, name = None):
+    def __init__(self, lchild = None, rchild = None, freq = 0, parent = None, name = None):
         '''建立節點之左右子節點、出現頻率(或其子節點總和)、父節點'''
         self.lchild = lchild
         self.rchild = rchild
         self.freq = freq
-        self.father = father
+        self.parent = parent
         self.name = name
     def isLeft(self):
         '''判斷該節點是否為其父節點之左子節點'''
-        return self.father.lchild == self
+        return self.parent.lchild == self
     def __str__(self):
-        return f"lchild: {self.lchild}, rchild: {self.rchild}, freq: {self.freq}, father: {self.father}, name: {self.name}"
+        if self.lchild == None:
+            lchild = None
+        else:
+            lchild = self.lchild.name
+        if self.rchild == None:
+            rchild = None
+        else:
+            rchild = self.rchild.name
+        if self.father == None:
+            father = None
+        else:
+            father = self.father.name
+        return f"lchild: {lchild}, rchild: {rchild}, freq: {self.freq}, father: {father}, name: {self.name}"
 
 def find_freq(fname):
     '''計算文檔內所有文字出現次數'''
@@ -53,10 +65,10 @@ def create_tree(node_list):
     while len(L) > 1:
         lchild = L.pop(0)
         rchild = L.pop(0)
-        father = node(lchild=lchild, rchild=rchild, freq=lchild.freq+rchild.freq)
-        L.insert(find_pos(L, father.freq), father)
-        lchild.father = father
-        rchild.father = father
+        parent = node(lchild=lchild, rchild=rchild, freq=lchild.freq+rchild.freq)
+        L.insert(find_pos(L, parent.freq), parent)
+        lchild.parent = parent
+        rchild.parent = parent
     return L[0]
 
 def huffman_encoding(node_list, root):
@@ -69,7 +81,7 @@ def huffman_encoding(node_list, root):
                 code[i] = "0" + code[i]
             else:
                 code[i] = "1" + code[i]
-            temp = temp.father
+            temp = temp.parent
     return code
 
 def print_code_table(code, freq_dic):
@@ -101,9 +113,33 @@ def code_to_file(new_fname, txt_code):
     string = bytes(string)
     with open(new_fname, "wb") as f:
         f.write(string)
+    return offset_length
+
+def save_tree(root, tree_fname, offset):
+    now = root
+    tree_code = []
+    try:
+        while True:
+            if now.name == None:
+                now = now.lchild
+                tree_code.append("‡")
+            elif now.isLeft():
+                tree_code.append(now.name)
+                now = now.parent.rchild
+            else:
+                tree_code.append(now.name)
+                now = now.parent
+                while not now.isLeft():
+                    now = now.parent
+                now = now.parent.rchild
+    except:
+        pass
+    with open(tree_fname, "w", encoding="UTF-8") as f:
+        f.write(str(offset))
+        f.write("".join(tree_code))
 
 if __name__ == "__main__":
-    fname = input("input txt file: ")
+    fname = input("txt file: ")
     freq_dic = find_freq(fname)
     node_list = create_leaf(freq_dic)
     root = create_tree(node_list)
@@ -119,11 +155,13 @@ if __name__ == "__main__":
     txt_code = txt_to_code(fname, code_dic)
 
     if input("Make a new file? [Y/n]: ") not in ["n", "N", "No", "no"]:
-        new_fname = input("file name (with .bin): ")
-        code_to_file(new_fname, txt_code)
+        new_fname = input("file name for save code(with .bin): ")
+        tree_fname = input("file name for save tree(with .txt): ")
+        offset = code_to_file(new_fname, txt_code)
+        save_tree(root, tree_fname, offset)
     
     original_file_size = os.path.getsize(fname)
     compressed_file_size = math.ceil(len(txt_code)/8)
-    print("Your original file size is", original_file_size, "bytes")
-    print("Output file size is", compressed_file_size, "bytes")
-    print("The compression rate is", compressed_file_size/original_file_size)
+    print(f"Your original file size is {original_file_size} bytes")
+    print(f"Output file size is {compressed_file_size} bytes")
+    print(f"The compression rate is {compressed_file_size/original_file_size}")
