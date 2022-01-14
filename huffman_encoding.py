@@ -137,6 +137,10 @@ def save_tree(root, tree_fname, offset):
     with open(tree_fname, "w", encoding="UTF-8") as f:
         f.write(str(offset))
         f.write("".join(tree_code))
+    tree_size = os.path.getsize(tree_fname)
+    if tree_fname == "A":
+        os.remove("A")
+    return tree_size
 
 if __name__ == "__main__":
     fname = input("txt file: ")
@@ -154,14 +158,16 @@ if __name__ == "__main__":
     code_dic = dict(zip(node_name, code))
     txt_code = txt_to_code(fname, code_dic)
 
+    tree_fname = "A"
+    offset = 1
     if input("Make a new file? [Y/n]: ") not in ["n", "N", "No", "no"]:
         new_fname = input("file name for save code(with .bin): ")
         tree_fname = input("file name for save tree(with .txt): ")
         offset = code_to_file(new_fname, txt_code)
-        save_tree(root, tree_fname, offset)
     
+    tree_size = save_tree(root, tree_fname, offset)
     original_file_size = os.path.getsize(fname)
-    compressed_file_size = math.ceil(len(txt_code)/8)
+    compressed_file_size = math.ceil(len(txt_code)/8) + tree_size
     print(f"Your original file size is {original_file_size} bytes")
     print(f"Output file size is {compressed_file_size} bytes")
     print(f"The compression rate is {compressed_file_size/original_file_size}")
