@@ -1,29 +1,3 @@
-class node:
-    def __init__(self, lchild = None, rchild = None, freq = 0, parent = None, name = None):
-        '''建立節點之左右子節點、出現頻率(或其子節點總和)、父節點'''
-        self.lchild = lchild
-        self.rchild = rchild
-        self.freq = freq
-        self.parent = parent
-        self.name = name
-    def isLeft(self):
-        '''判斷該節點是否為其父節點之左子節點'''
-        return self.parent.lchild == self
-    def __str__(self):
-        if self.lchild == None:
-            lchild = None
-        else:
-            lchild = self.lchild.name
-        if self.rchild == None:
-            rchild = None
-        else:
-            rchild = self.rchild.name
-        if self.parent == None:
-            parent = None
-        else:
-            parent = self.parent.name
-        return f"lchild: {lchild}, rchild: {rchild}, freq: {self.freq}, parent: {parent}, name: {self.name}"
-
 def decode_tree(tree_fname):
     with open(tree_fname, "r", encoding="UTF-8") as f:
         offset = int(f.read(1))
@@ -50,7 +24,7 @@ def decode_tree(tree_fname):
     return dic, offset
 
 def decode(dic, offset, code_fname, out_fname):
-    with open("114.bin", "rb") as f:
+    with open(code_fname, "rb") as f:
         code = []
         for i in f.read():
             code.append("0"*(10-len(bin(i))) + bin(i)[2:])
