@@ -27,54 +27,47 @@ class node:
 def decode_tree(tree_fname):
     with open(tree_fname, "r", encoding="UTF-8") as f:
         offset = int(f.read(1))
-        tree_code = f.read()
-    root = node()
-    tree_code = list(tree_code)
-    now = root
+        tree_code = list(f.read())
     i = 0
-    end = len(tree_code)
+    j = len(tree_code)
+    temp = ""
+    dic = dict()
     try:
-        while i < end:
+        while i < j:
             if tree_code[i] == "‡":
-                now.lchild = node(parent = now)
-                now = now.lchild
-            elif now.isLeft():
-                now.name = tree_code[i]
-                now.parent.rchild = node(parent = now.parent)
-                now = now.parent.rchild
+                temp += "0"
+            elif tree_code[i-1] == "‡":
+                dic[temp] = tree_code[i]
+                temp = temp[:-1] + "1"
             else:
-                now.name = tree_code[i]
-                while not now.isLeft():
-                    now = now.parent
-                now.parent.rchild = node(parent = now.parent)
-                now = now.parent.rchild
+                dic[temp] = tree_code[i]
+                temp2 = list(reversed(temp))
+                pos = temp2.index("0")
+                temp = temp[:len(temp)-pos-1] + "1"
             i += 1
     except:
         pass
-    return root, offset
+    return dic, offset
 
-def decode(root, offset, code_fname, out_fname):
-    with open(code_fname, "rb") as f:
+def decode(dic, offset, code_fname, out_fname):
+    with open("114.bin", "rb") as f:
         code = []
         for i in f.read():
             code.append("0"*(10-len(bin(i))) + bin(i)[2:])
         code = "".join(code)
-    if offset:
-        code = code[:-offset]
-    now = root
+        if offset:
+            code = code[:-offset]
+    i = 0
+    k = 0
+    j = len(code)
     ans = []
-    code = list(code)
-    while code:
-        if now.name == None:
-            if code[0] == "0":
-                now = now.lchild
-            else:
-                now = now.rchild
-            code.pop(0)
+    while k <= j:
+        if code[i:k] in dic:
+            ans.append(dic[code[i:k]])
+            i = k
+            k += 1
         else:
-            ans.append(now.name)
-            now = root
-    ans.append(now.name)
+            k += 1
     with open(out_fname, "w", encoding="UTF-8") as f:
         f.write("".join(ans))
 
@@ -83,5 +76,5 @@ if __name__ == "__main__":
     code_fname = input("code file: ")
     tree_fname = input("tree file: ")
     out_fname = input("output file name: ")
-    root, offset = decode_tree(tree_fname)
-    decode(root, offset, code_fname, out_fname)
+    dic, offset = decode_tree(tree_fname)
+    decode(dic, offset, code_fname, out_fname)
