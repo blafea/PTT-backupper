@@ -100,20 +100,16 @@ def txt_to_code(fname, code_dic):
 
 def code_to_file(new_fname, txt_code):
     '''將編碼寫至bin檔案中'''
-    binary_list = []
-    while len(txt_code) > 8:
-        binary_list.append(txt_code[:8])
-        txt_code = txt_code[8:]
-    if txt_code:
-        offset_length = 8-len(txt_code)
-        binary_list.append(txt_code + "0" * offset_length)
-    string = []
-    for binary_value in binary_list:
-        string.append(int(binary_value, 2))
-    string = bytes(string)
+    i = 0
+    offset = 8-(len(txt_code)%8)
+    txt_code += "0" * offset
+    ans = bytearray()
+    while i < len(txt_code):
+        ans.append(int(txt_code[i : i + 8], 2))
+        i += 8
     with open(new_fname, "wb") as f:
-        f.write(string)
-    return offset_length
+        f.write(ans)
+    return offset
 
 def save_tree(root, tree_fname, offset):
     now = root
