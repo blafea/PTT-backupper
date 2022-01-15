@@ -1,10 +1,11 @@
 # Huffman coding with internet data
 In this project, we implement web crawling, Huffman encoding/decoding to compress and save the text data from the website (PTT). 
 ## Requirements:
-
+beautifulsoup4==4.10.0\
+requests==2.26.0
 ## File description
 There's three way to use our program.
-1. For compressing the text of all article in the gossiping board on PTT in any ended day, run `webcrawler_ptt.py` and input the date.
+1. For compressing the text of all article in the gossiping board on PTT in any ended day, run `main.py` and input the date.
 2. For directly compressing the txt file that you have, run `huffman_encoding.py` and complete the requirements.
 3. For decoding your file, run `huffman_decoding.py` and input the bin file and the tree file.
 

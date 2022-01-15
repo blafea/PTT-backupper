@@ -8,9 +8,9 @@ def decode_tree(tree_fname):
     dic = dict()
     try:
         while i < j:
-            if tree_code[i] == "‡":
+            if tree_code[i] == "ª":
                 temp += "0"
-            elif tree_code[i-1] == "‡":
+            elif tree_code[i-1] == "ª":
                 dic[temp] = tree_code[i]
                 temp = temp[:-1] + "1"
             else:

@@ -118,7 +118,7 @@ def save_tree(root, tree_fname, offset):
         while True:
             if now.name == None:
                 now = now.lchild
-                tree_code.append("‡")
+                tree_code.append("ª")
             elif now.isLeft():
                 tree_code.append(now.name)
                 now = now.parent.rchild
@@ -137,6 +137,36 @@ def save_tree(root, tree_fname, offset):
     if tree_fname == "A":
         os.remove("A")
     return tree_size
+
+def main(fname, month, date):
+    freq_dic = find_freq(fname)
+    node_list = create_leaf(freq_dic)
+    root = create_tree(node_list)
+    code = huffman_encoding(node_list, root)
+    node_name = []
+    for i in range(len(code)):
+        node_name.append(freq_dic[i][0])
+
+    if input("Print code table? [Y/n]: ") not in ["n", "N", "No", "no"]:
+        print_code_table(code, freq_dic)
+
+    code_dic = dict(zip(node_name, code))
+    txt_code = txt_to_code(fname, code_dic)
+
+    tree_fname = "A"
+    offset = 1
+    new_fname = month + date + ".bin"
+    tree_fname = month + date + "_tree.txt"
+    offset = code_to_file(new_fname, txt_code)
+    
+    tree_size = save_tree(root, tree_fname, offset)
+    original_file_size = os.path.getsize(fname)
+    compressed_file_size = math.ceil(len(txt_code)/8) + tree_size
+    print(f"Your original file size is {original_file_size} bytes")
+    print(f"Output file size is {compressed_file_size} bytes")
+    print(f"The compression rate is {compressed_file_size/original_file_size}")
+    if fname == "AAA":
+        os.remove("AAA")
 
 if __name__ == "__main__":
     fname = input("txt file: ")
