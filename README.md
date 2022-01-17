@@ -20,8 +20,8 @@ To encode it, you can follow the steps below.
     file name for save code(with .bin): output.bin
     file name for save tree(with .txt): tree.txt
     Your original file size is 14700 bytes
-    Output file size is 5025 bytes
-    The compression rate is 0.34183673469387754
+    Output file size is 9024 bytes
+    The compression rate is 0.6138775510204082
 
 So you will get `output.bin` and `tree.txt`, representing the encoded code and the information of the huffman tree. Also, the two file is in this folder.
 
