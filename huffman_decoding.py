@@ -1,4 +1,5 @@
 def decode_tree(tree_fname):
+    '''將樹解碼並建立字典'''
     with open(tree_fname, "r", encoding="UTF-8") as f:
         offset = int(f.read(1))
         tree_code = list(f.read())
@@ -24,6 +25,7 @@ def decode_tree(tree_fname):
     return dic, offset
 
 def decode(dic, offset, code_fname, out_fname):
+    '''將binary code根據字典解碼並還原檔案'''
     with open(code_fname, "rb") as f:
         code = []
         for i in f.read():
