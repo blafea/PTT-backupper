@@ -38,11 +38,11 @@ def decode(dic, offset, code_fname, out_fname):
     j = len(code)
     ans = []
     while k <= j:
-        if code[i:k] in dic:
+        try:
             ans.append(dic[code[i:k]])
             i = k
             k += 1
-        else:
+        except:
             k += 1
     with open(out_fname, "w", encoding="UTF-8") as f:
         f.write("".join(ans))
