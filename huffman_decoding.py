@@ -27,7 +27,7 @@ def decode(dic, offset, code_fname, out_fname):
     with open(code_fname, "rb") as f:
         code = []
         for i in f.read():
-            code.append("0"*(10-len(bin(i))) + bin(i)[2:])
+            code.append(str(bin(i))[2:].zfill(8))
         code = "".join(code)
         if offset:
             code = code[:-offset]
