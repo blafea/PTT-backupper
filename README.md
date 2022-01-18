@@ -31,4 +31,5 @@ To decode the file, you can follow the steps below.
     code file: output.bin
     tree file: tree.txt
     output file name: decode.txt
+
 Finally, you'll get `decode.txt`, which is totally the same as the original input file, and it's also in this folder.
